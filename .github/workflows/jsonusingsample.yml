@@ -18,7 +18,10 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Read the JSON file and print
+        id: json_properties
+        uses: zoexx/github-action-json-file-properties@release
+        with:
+          file_path: "./json-files/emp.json"
         
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      - run: |
+          echo ${{steps.json_properties.outputs.employee.name}}
