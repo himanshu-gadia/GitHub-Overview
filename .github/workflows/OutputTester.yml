@@ -1,0 +1,34 @@
+# This is a basic workflow to help you get started with Actions
+name: How output works in job
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  job1:
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+    outputs:
+        output1: ${{ steps.step1.output.testVar1 }}
+        output2: ${{ steps.step2.output.testVar2 }}
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Runs a single command using the runners shell
+      - id: step1
+        run: echo "testVar1=Hello" >> "$GITHUB_OUTPUT"
+      - id: step2
+        run: echo "testVar2=World" >> "$GITHUB_OUTPUT"
+  job2:
+    runs-on: self-hosted
+    needs: job1
+    steps:
+      - env:
+          OUTPUT1: ${{ jobs.job1.outputs.output1 }}
+          OUTPUT2: ${{ job.job1.outputs.output2 }}
+      
+        run: echo "$OUTPUT1 $OUTPUT2"
+
+        
